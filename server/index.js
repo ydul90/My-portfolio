@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
+require('dns').setDefaultResultOrder('ipv4first');
 require('dotenv').config();
 
 const app = express();
@@ -161,16 +162,18 @@ app.post('/api/contact', async (req, res) => {
 
     // D. If valid, Send Email using Nodemailer
     const transporter = nodemailer.createTransport({
-        host: '74.125.136.108', // This is the IPv4 address for smtp.gmail.com
-        port: 465,
-        secure: true,
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // TLS
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         },
         tls: {
             rejectUnauthorized: false
-        }
+        },
+        connectionTimeout: 10000, // 10 seconds
+        greetingTimeout: 10000
     });
 
     // Verify connection configuration
