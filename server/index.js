@@ -161,15 +161,24 @@ app.post('/api/contact', async (req, res) => {
 
     // D. If valid, Send Email using Nodemailer
     const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // true for 465, false for other ports
+        host: '74.125.136.108', // This is the IPv4 address for smtp.gmail.com
+        port: 465,
+        secure: true,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         },
         tls: {
             rejectUnauthorized: false
+        }
+    });
+
+    // Verify connection configuration
+    transporter.verify(function(error, success) {
+        if (error) {
+            console.log("Transporter verify error:", error);
+        } else {
+            console.log("Server is ready to take our messages");
         }
     });
 
