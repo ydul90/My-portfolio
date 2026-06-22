@@ -2,18 +2,18 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBJ3IUQTooCRovI6JY6RBsv00ShBecXzqQ",
-  authDomain: "my-portfolio-7e3bd.firebaseapp.com",
-  projectId: "my-portfolio-7e3bd",
-  storageBucket: "my-portfolio-7e3bd.firebasestorage.app",
-  messagingSenderId: "467194965272",
-  appId: "1:467194965272:web:0a547f7fe69134a9a8826d",
-  measurementId: "G-TR0SJS10QJ"
+  apiKey: "AIzaSyAHvk7JpIvRkkIwgGmrqushNrjeHIYRFhQ",
+  authDomain: "my-portfolio-b9913.firebaseapp.com",
+  projectId: "my-portfolio-b9913",
+  storageBucket: "my-portfolio-b9913.firebasestorage.app",
+  messagingSenderId: "33992329175",
+  appId: "1:33992329175:web:d9dbb187f923bd1efcad92",
+  measurementId: "G-488EE4MKQ2"
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
   try {
