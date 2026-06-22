@@ -1,6 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
 require('dns').setDefaultResultOrder('ipv4first');
 require('dotenv').config();
@@ -160,52 +159,33 @@ app.post('/api/contact', async (req, res) => {
     // }
     console.log(`[BYPASS] Verification skipped for ${email}. Proceeding to send email...`);
 
-    // D. If valid, Send Email using Nodemailer
-    const mailOptions = {
-        from: process.env.EMAIL_USER, // Must be your authenticated email
-        replyTo: email,              // This allows you to click "Reply" to the user
-        to: process.env.EMAIL_USER,
-        subject: `New Portfolio Message from ${name}`,
-        text: `Name: ${name}\nEmail: ${email}\nProject: ${project_type}\n\nMessage:\n${message}`
-    };
-
+    // D. If valid, Send Message using Static Forms
     try {
-        await transporter.sendMail(mailOptions);
-        res.json({ success: true, message: "Message sent successfully!" });
+        const response = await axios.post('https://api.staticforms.dev/submit', {
+            accessKey: process.env.STATICFORMS_ACCESS_KEY,
+            name: name,
+            email: email,
+            subject: `New Portfolio Message from ${name}`,
+            message: `Project Type: ${project_type}\n\nMessage: ${message}`,
+            replyTo: '@'
+        });
+
+        if (response.data.success) {
+            res.json({ success: true, message: "Message sent successfully!" });
+        } else {
+            console.error("Static Forms Error Response:", response.data);
+            res.status(500).json({
+                success: false,
+                message: response.data.message || "Failed to send message via Static Forms."
+            });
+        }
     } catch (error) {
-        console.error("Mail Error:", error);
+        console.error("Static Forms Error:", error.response ? error.response.data : error.message);
         res.status(500).json({
             success: false,
-            message: "Failed to send email.",
-            debug: error.message // This will help us see the exact Gmail error
+            message: "Failed to send email via Static Forms.",
+            debug: error.message
         });
-    }
-});
-
-// Create transporter outside the route for better performance and to ensure settings are applied
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // SSL
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,
-    family: 4, // Force IPv4
-    localAddress: '0.0.0.0' // Force outbound connection to use IPv4 interface
-});
-
-// Verify connection configuration
-transporter.verify(function(error, success) {
-    if (error) {
-        console.log("Transporter verify error:", error);
-    } else {
-        console.log("Server is ready to take our messages");
     }
 });
 
