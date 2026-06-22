@@ -16,6 +16,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Ensure sections aren't covered by fixed header when scrolling */
+  scroll-padding-top: 5rem; /* 80px (h-20) */
 }
 
 body {

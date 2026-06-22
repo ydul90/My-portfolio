@@ -20,8 +20,11 @@ import {
   CircleDot,
   Component,
   AtSign,
+  FileDown,
   Lock,
   LogOut,
+  Copy,
+  Check,
   User as UserIcon,
 } from "lucide-react";
 import { LegalModal, PrivacyPolicyContent, TermsOfServiceContent } from "./Legal";
@@ -103,6 +106,29 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
     { label: "Contact", href: "#contact" },
   ];
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setMobileOpen(false);
+
+    // Small delay to allow menu closing animation to start
+    setTimeout(() => {
+      const targetId = href.replace('#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        const offset = 80; // Navbar height
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, 100);
+  };
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -117,7 +143,11 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-3 group">
+          <a
+            href="#home"
+            onClick={(e) => scrollToSection(e, '#home')}
+            className="flex items-center gap-3 group"
+          >
             <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border border-white/10">
               <img src={logo} alt="Logo" className="w-full h-full object-cover" />
             </div>
@@ -137,6 +167,7 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
               <a
                 key={link.label}
                 href={link.href}
+                onClick={(e) => scrollToSection(e, link.href)}
                 className="text-text-muted text-sm font-medium hover:text-white transition-colors duration-200 relative group"
               >
                 {link.label}
@@ -219,53 +250,85 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-bg/95 backdrop-blur-xl border-b border-border overflow-hidden"
-          >
-            <div className="px-6 py-6 flex flex-col gap-4">
-              {user && (
-                <div className="flex items-center gap-3 pb-4 border-b border-border mb-2">
-                  <img src={user.photoURL || ""} className="w-10 h-10 rounded-full" />
-                  <div>
-                    <p className="text-white text-sm font-medium">{user.displayName}</p>
-                    <button onClick={onLogout} className="text-red-400 text-xs">Sign Out</button>
+          <div className="fixed inset-0 z-[100] md:hidden">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-20 left-0 right-0 bg-bg/95 backdrop-blur-xl border-b border-border overflow-hidden"
+            >
+              <div className="px-6 py-8 flex flex-col gap-4">
+                {user && (
+                  <div className="flex items-center gap-3 pb-4 border-b border-border mb-2">
+                    <img src={user.photoURL || ""} className="w-10 h-10 rounded-full" />
+                    <div>
+                      <p className="text-white text-sm font-medium">{user.displayName}</p>
+                      <button onClick={onLogout} className="text-red-400 text-xs">Sign Out</button>
+                    </div>
                   </div>
-                </div>
-              )}
-              {links.map((link) => (
+                )}
+                {links.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={(e) => scrollToSection(e, link.href)}
+                    className="text-text-muted text-lg font-medium hover:text-white transition-colors py-2 w-full block"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                {!user && (
+                  <button
+                    onClick={() => {
+                      onSignIn();
+                      setMobileOpen(false);
+                    }}
+                    className="text-white text-lg font-medium text-left hover:text-accent transition-colors py-2 w-full block"
+                  >
+                    Sign In
+                  </button>
+                )}
                 <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-text-muted text-lg font-medium hover:text-white transition-colors"
+                  href="#contact"
+                  onClick={(e) => scrollToSection(e, '#contact')}
+                  className="inline-flex items-center justify-center gap-2 bg-accent text-white text-sm font-medium px-6 py-3 rounded-full mt-2"
                 >
-                  {link.label}
+                  Let&apos;s Talk
+                  <ArrowRight className="w-4 h-4" />
                 </a>
-              ))}
-              {!user && (
-                <button
-                  onClick={() => {
-                    onSignIn();
-                    setMobileOpen(false);
-                  }}
-                  className="text-white text-lg font-medium text-left hover:text-accent transition-colors"
-                >
-                  Sign In
-                </button>
-              )}
-              <a
-                href="#contact"
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex items-center justify-center gap-2 bg-accent text-white text-sm font-medium px-6 py-3 rounded-full mt-2"
-              >
-                Let&apos;s Talk
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </motion.div>
+
+                {/* Mobile Socials */}
+                <div className="flex items-center gap-4 pt-6 border-t border-border mt-4">
+                  {[
+                    { Icon: Facebook, href: "https://facebook.com/itsludian" },
+                    { Icon: Instagram, href: "https://www.instagram.com/ludianhiuzong/?__pwa=1" },
+                    { Icon: Linkedin, href: "https://www.linkedin.com/in/ludy-bong-conag-9856a6352" },
+                    { Icon: AtSign, href: "https://www.threads.com/@ludianofficial" },
+                  ].map((social, i) => (
+                    <a
+                      key={i}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-dim hover:text-white"
+                    >
+                      <social.Icon className="w-4 h-4" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </motion.nav>
@@ -277,7 +340,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-screen flex items-center overflow-hidden scroll-mt-20"
     >
       {/* Hero Background Image */}
       <div className="absolute inset-0 z-0">
@@ -350,13 +413,23 @@ function Hero() {
               View My Work
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>
-            <a
-              href="#about"
+            <button
+              onClick={() => {
+                const element = document.getElementById('contact');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                  // Find the textarea and pre-fill it
+                  const messageArea = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+                  const projectType = document.querySelector('input[name="project_type"]') as HTMLInputElement;
+                  if (messageArea) messageArea.value = "Hello! I am interested in your work and would like to request a copy of your CV. Thank you!";
+                  if (projectType) projectType.value = "CV Request";
+                }
+              }}
               className="group inline-flex items-center gap-3 border border-border hover:border-text-dim text-white font-medium px-8 py-4 rounded-full transition-all duration-300 bg-surface/40 backdrop-blur-sm hover:bg-surface/60"
             >
-              <Play className="w-4 h-4" />
-              Learn More
-            </a>
+              <Mail className="w-4 h-4" />
+              Request CV
+            </button>
           </motion.div>
         </div>
       </div>
@@ -407,7 +480,7 @@ function About() {
   }, [isLowOpacity]);
 
   return (
-    <section id="about" className="relative py-28 lg:py-36 overflow-hidden">
+    <section id="about" className="relative py-28 lg:py-36 overflow-hidden scroll-mt-20">
       {/* Video Background */}
       <div className="absolute inset-0 z-0 bg-black">
         <motion.video
@@ -580,8 +653,9 @@ const projects = [
 
 function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => void }) {
   return (
-    <section id="work" className="relative py-28 lg:py-36 bg-gradient-to-b from-[#e85d2b]/15 to-black min-h-[600px]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-500">
+    <section id="work" className="relative py-28 lg:py-36 bg-gradient-to-b from-[#e85d2b]/15 to-black min-h-[600px] scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-500 relative">
+        {!isLoggedIn && <ProtectedOverlay onSignIn={onSignIn} />}
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -764,7 +838,7 @@ const services = [
 
 function Services() {
   return (
-    <section id="services" className="relative py-28 lg:py-36">
+    <section id="services" className="relative py-28 lg:py-36 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -894,6 +968,19 @@ function Testimonials() {
 function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid-email">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const emailAddress = "conagludybongbsitpittabango@gmail.com";
+  // Gmail-specific compose link
+  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}`;
+
+  const copyToClipboard = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(emailAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -956,7 +1043,7 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
         form.reset();
       } else {
         setStatus("error");
-        setErrorMessage(data.message || "Failed to send message.");
+        setErrorMessage(data.debug || data.message || "Failed to send message.");
       }
     } catch (error) {
       console.error("Fetch error:", error);
@@ -966,7 +1053,7 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
   };
 
   return (
-    <section id="contact" className="relative py-28 lg:py-36 min-h-[600px]">
+    <section id="contact" className="relative py-28 lg:py-36 min-h-[600px] scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
           {/* Left */}
@@ -991,28 +1078,42 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
             </p>
 
             <div className="space-y-5">
-              <a
-                href={user ? "mailto:conagludybongbsitpittabango@gmail.com" : "#"}
-                onClick={(e) => {
-                  if (!user) {
-                    e.preventDefault();
-                    onSignIn();
-                  }
-                }}
-                className="flex items-center gap-4 group"
-              >
-                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <Mail className="w-5 h-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-text-dim text-xs uppercase tracking-wider">
-                    Email
-                  </p>
-                  <p className="text-white text-sm font-medium group-hover:text-accent transition-colors">
-                    {user ? "conagludybongbsitpittabango@gmail.com" : "Sign in to view email"}
-                  </p>
-                </div>
-              </a>
+              <div className="relative group/item">
+                <a
+                  href={user ? gmailLink : "#"}
+                  target={user ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    if (!user) {
+                      e.preventDefault();
+                      onSignIn();
+                    }
+                  }}
+                  className="flex items-center gap-4 group"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                    <Mail className="w-5 h-5 text-accent" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-text-dim text-xs uppercase tracking-wider">
+                      Email
+                    </p>
+                    <p className="text-white text-sm font-medium group-hover:text-accent transition-colors truncate">
+                      {user ? emailAddress : "Sign in to view email"}
+                    </p>
+                  </div>
+                </a>
+
+                {user && (
+                  <button
+                    onClick={copyToClipboard}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-text-dim hover:text-white transition-colors"
+                    title="Copy to clipboard"
+                  >
+                    {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                )}
+              </div>
 
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -1169,10 +1270,22 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
 
 /* ─────────────────────────── Footer ─────────────────────────── */
 function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPrivacy: () => void, onOpenTerms: () => void, isLoggedIn: boolean, onSignIn: () => void }) {
+  const emailAddress = "conagludybongbsitpittabango@gmail.com";
+  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}`;
+
   const handleEmailClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
       e.preventDefault();
       onSignIn();
+    }
+  };
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -1211,6 +1324,7 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
                 <li key={item}>
                   <a
                     href={`#${item.toLowerCase()}`}
+                    onClick={(e) => scrollToSection(e, `#${item.toLowerCase()}`)}
                     className="text-text-dim hover:text-white transition-colors text-sm"
                   >
                     {item === "Work" ? "Projects" : item}
@@ -1225,17 +1339,9 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
             <h4 className="text-white text-xs font-bold tracking-[0.2em] uppercase mb-8">
               Let&apos;s Connect
             </h4>
-            <p className="text-text-dim text-sm mb-6">
+            <p className="text-text-dim text-sm mb-8">
               Have an idea? Let&apos;s turn it into something great.
             </p>
-            <a
-              href={isLoggedIn ? "mailto:conagludybongbsitpittabango@gmail.com" : "#"}
-              onClick={handleEmailClick}
-              className="group inline-flex items-center gap-2 text-accent font-medium text-sm mb-8 hover:opacity-80 transition-opacity"
-            >
-              {isLoggedIn ? "conagludybongbsitpittabango@gmail.com" : "Sign in to view email"}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </a>
 
             {/* Socials */}
             <div className="flex items-center gap-3">
@@ -1302,6 +1408,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.documentElement.style.scrollBehavior = "smooth";
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
@@ -1357,7 +1465,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-bg text-text select-none">
+    <div className="min-h-screen bg-bg text-text">
       <Navbar user={user} onSignIn={() => setActiveModal("auth")} onLogout={handleLogout} />
       <Hero />
       <About />

@@ -16,9 +16,11 @@ app.use((req, res, next) => {
 
 // Support both local and production URLs
 const allowedOrigins = [
-    'http://localhost:5173', // Vite default
+    'http://localhost:5173',
     'http://localhost:3000',
-    process.env.FRONTEND_URL  // Your future production URL (Firebase)
+    'https://my-portfolio-7e3bd.web.app',
+    'https://my-portfolio-7e3bd.firebaseapp.com',
+    process.env.FRONTEND_URL
 ].filter(Boolean);
 
 app.use(cors({
@@ -161,13 +163,14 @@ app.post('/api/contact', async (req, res) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.EMAIL_USER, // Your Gmail
-            pass: process.env.EMAIL_PASS  // Your Gmail App Password
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         }
     });
 
     const mailOptions = {
-        from: email,
+        from: process.env.EMAIL_USER, // Must be your authenticated email
+        replyTo: email,              // This allows you to click "Reply" to the user
         to: process.env.EMAIL_USER,
         subject: `New Portfolio Message from ${name}`,
         text: `Name: ${name}\nEmail: ${email}\nProject: ${project_type}\n\nMessage:\n${message}`
@@ -178,7 +181,11 @@ app.post('/api/contact', async (req, res) => {
         res.json({ success: true, message: "Message sent successfully!" });
     } catch (error) {
         console.error("Mail Error:", error);
-        res.status(500).json({ success: false, message: "Failed to send email." });
+        res.status(500).json({
+            success: false,
+            message: "Failed to send email.",
+            debug: error.message // This will help us see the exact Gmail error
+        });
     }
 });
 
