@@ -161,31 +161,6 @@ app.post('/api/contact', async (req, res) => {
     console.log(`[BYPASS] Verification skipped for ${email}. Proceeding to send email...`);
 
     // D. If valid, Send Email using Nodemailer
-    const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // TLS
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        },
-        connectionTimeout: 10000, // 10 seconds
-        greetingTimeout: 10000,
-        family: 4 // Force IPv4 to avoid ENETUNREACH errors on IPv6-only resolutions
-    });
-
-    // Verify connection configuration
-    transporter.verify(function(error, success) {
-        if (error) {
-            console.log("Transporter verify error:", error);
-        } else {
-            console.log("Server is ready to take our messages");
-        }
-    });
-
     const mailOptions = {
         from: process.env.EMAIL_USER, // Must be your authenticated email
         replyTo: email,              // This allows you to click "Reply" to the user
@@ -204,6 +179,33 @@ app.post('/api/contact', async (req, res) => {
             message: "Failed to send email.",
             debug: error.message // This will help us see the exact Gmail error
         });
+    }
+});
+
+// Create transporter outside the route for better performance and to ensure settings are applied
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // SSL
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    family: 4, // Force IPv4
+    localAddress: '0.0.0.0' // Force outbound connection to use IPv4 interface
+});
+
+// Verify connection configuration
+transporter.verify(function(error, success) {
+    if (error) {
+        console.log("Transporter verify error:", error);
+    } else {
+        console.log("Server is ready to take our messages");
     }
 });
 
