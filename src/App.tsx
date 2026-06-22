@@ -1443,8 +1443,9 @@ export default function App() {
     try {
       await signInWithGoogle();
       setActiveModal(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Sign in failed", error);
+      alert(`Sign in failed: ${error.message || "Unknown error"}`);
     }
   };
 
