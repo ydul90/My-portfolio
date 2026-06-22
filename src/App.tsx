@@ -1019,10 +1019,8 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
     setStatus("sending");
 
     try {
-      // Use local URL for testing, fallback to production
-      const API_URL = window.location.hostname === 'localhost'
-        ? "http://localhost:1000"
-        : "https://my-portfolio-lnv3.onrender.com";
+      // Use environment variable for API URL, fallback to production URL
+      const API_URL = import.meta.env.VITE_API_URL || "https://my-portfolio-lnv3.onrender.com";
 
       const response = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
