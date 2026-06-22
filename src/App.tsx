@@ -932,8 +932,8 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
     setStatus("sending");
 
     try {
-      // Use production URL if available, else fallback to localhost
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      // Production URL for your Render backend
+      const API_URL = "https://my-portfolio-lnv3.onrender.com";
 
       const response = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
