@@ -1247,6 +1247,27 @@ export default function App() {
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
 
+    // Initialize GTranslate
+    (window as any).gtranslateSettings = {
+      "default_language": "en",
+      "detect_browser_language": true,
+      "wrapper_selector": ".gtranslate_wrapper",
+      "flag_size": 16,
+      "alt_flags": { "en": "usa" }
+    };
+
+    const addGTranslate = () => {
+      if (!document.querySelector('script[src*="gtranslate.net"]')) {
+        const script = document.createElement("script");
+        script.src = "https://cdn.gtranslate.net/widgets/latest/dwl.js";
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+    };
+
+    // Small delay to ensure React has rendered the .gtranslate_wrapper divs
+    const timer = setTimeout(addGTranslate, 500);
+
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -1264,6 +1285,7 @@ export default function App() {
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
+      clearTimeout(timer);
     };
   }, []);
 
