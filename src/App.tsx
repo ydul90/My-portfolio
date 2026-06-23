@@ -95,13 +95,13 @@ function Navbar() {
 
           if (navElem && (navElem.innerHTML === '' || !navElem.querySelector('.goog-te-gadget-simple'))) {
             new (window as any).google.translate.TranslateElement(
-              { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
+              { pageLanguage: 'en' },
               'google_translate_element_nav'
             );
           }
           if (mobileElem && (mobileElem.innerHTML === '' || !mobileElem.querySelector('.goog-te-gadget-simple'))) {
             new (window as any).google.translate.TranslateElement(
-              { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
+              { pageLanguage: 'en' },
               'google_translate_element_mobile'
             );
           }

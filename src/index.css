@@ -51,48 +51,63 @@ body {
   background: #444;
 }
 
-/* Google Translate Styles */
-#google_translate_element_nav, #google_translate_element_mobile {
-  display: inline-block;
-  vertical-align: middle;
+/* ─────────────────────────── Google Translate ─────────────────────────── */
+/* Hide the top white banner */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
 }
 
-.goog-te-gadget-simple {
-  background-color: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  cursor: pointer !important;
+/* Prevent the body from being pushed down by the banner */
+body {
+  top: 0 !important;
+  position: static !important;
 }
 
-.goog-te-menu-value {
+/* Hide the "Powered by Google" text and logo inside the widget */
+.goog-te-gadget {
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #a3a3a3 !important;
-  font-size: 13px !important;
+  border-radius: 9999px !important;
+  padding: 4px 12px !important;
+  font-size: 12px !important;
+  font-family: 'Inter', sans-serif !important;
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
   margin: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px;
 }
 
-.goog-te-menu-value:hover {
+.goog-te-gadget .goog-te-combo:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
   color: #ffffff !important;
 }
 
-.goog-te-gadget-icon {
+/* Hide the Google icon next to the dropdown */
+.goog-te-gadget img {
   display: none !important;
 }
 
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
+/* Custom styling for the dropdown container in navbar */
+#google_translate_element_nav,
+#google_translate_element_mobile {
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
-body {
-  top: 0px !important;
-}
-
-/* Fix for the translate dropdown menu */
+/* Fix for the translate dropdown menu (the actual popup) */
 .goog-te-menu-frame {
-  z-index: 99999999 !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+  z-index: 999999 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
