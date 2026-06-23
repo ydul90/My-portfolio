@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="/My-portfolio/assets/logo-BYhHi67K.png" />
     <link rel="manifest" href="/My-portfolio/manifest.json" />
     <meta name="theme-color" content="#e85d2b" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com https://www.gstatic.com https://translate-pa.googleapis.com; script-src-elem 'self' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com https://www.gstatic.com https://translate-pa.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://* https://www.gstatic.com https://translate.google.com; connect-src 'self' https://api.staticforms.dev https://translate.googleapis.com https://translate-pa.googleapis.com; frame-src https://translate.google.com https://translate.googleapis.com https://www.google.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google.com https://*.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.googleapis.com https://api.staticforms.dev; frame-src https://*.google.com https://*.googleapis.com;">
     <meta name="referrer" content="no-referrer-when-downgrade">
     <link rel="apple-touch-icon" href="/My-portfolio/assets/logo-BYhHi67K.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,6 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          // Fix for GitHub Pages subfolder path
           const isGH = window.location.hostname.includes('github.io');
           const swPath = isGH ? '/My-portfolio/sw.js' : '/sw.js';
           navigator.serviceWorker.register(swPath).catch(err => console.log('SW registration failed:', err));
