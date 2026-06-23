@@ -95,13 +95,21 @@ function Navbar() {
 
           if (navElem && (navElem.innerHTML === '' || !navElem.querySelector('.goog-te-gadget-simple'))) {
             new (window as any).google.translate.TranslateElement(
-              { pageLanguage: 'en' },
+              {
+                pageLanguage: 'en',
+                layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+              },
               'google_translate_element_nav'
             );
           }
           if (mobileElem && (mobileElem.innerHTML === '' || !mobileElem.querySelector('.goog-te-gadget-simple'))) {
             new (window as any).google.translate.TranslateElement(
-              { pageLanguage: 'en' },
+              {
+                pageLanguage: 'en',
+                layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+              },
               'google_translate_element_mobile'
             );
           }
@@ -1296,18 +1304,17 @@ export default function App() {
     const killGoogleBar = () => {
       const banner = document.querySelector(".goog-te-banner-frame") as HTMLElement;
       if (banner) {
-        banner.style.display = "none";
-        banner.style.visibility = "hidden";
-        banner.style.height = "0";
+        banner.style.setProperty("display", "none", "important");
       }
-      if (document.body.style.top !== "0px") {
-        document.body.style.top = "0px";
-      }
+      // Reset body and html offsets that Google forces
+      document.body.style.setProperty("top", "0px", "important");
+      document.body.style.setProperty("position", "static", "important");
+      document.documentElement.style.setProperty("margin-top", "0px", "important");
     };
 
     const observer = new MutationObserver(killGoogleBar);
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    const interval = setInterval(killGoogleBar, 1000);
+    observer.observe(document.documentElement, { attributes: true, subtree: true });
+    const interval = setInterval(killGoogleBar, 500);
 
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
