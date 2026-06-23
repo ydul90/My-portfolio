@@ -18,6 +18,8 @@ app.use((req, res, next) => {
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
+    'https://my-portfolio-new-c1387.web.app',
+    'https://my-portfolio-new-c1387.firebaseapp.com',
     'https://my-portfolio-7e3bd.web.app',
     'https://my-portfolio-7e3bd.firebaseapp.com',
     process.env.FRONTEND_URL
