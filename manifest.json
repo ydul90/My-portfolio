@@ -3,19 +3,19 @@
   "name": "Ludy Bong Conag Portfolio",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "logo.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "/logo.png",
+      "src": "logo.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any"
     }
   ],
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "theme_color": "#e85d2b",
   "background_color": "#000000"
