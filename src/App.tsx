@@ -90,13 +90,16 @@ function Navbar() {
     const addGoogleTranslate = () => {
       (window as any).googleTranslateElementInit = () => {
         const initWidget = () => {
-          if (document.getElementById('google_translate_element_nav')) {
+          const navElem = document.getElementById('google_translate_element_nav');
+          const mobileElem = document.getElementById('google_translate_element_mobile');
+
+          if (navElem && (navElem.innerHTML === '' || !navElem.querySelector('.goog-te-gadget-simple'))) {
             new (window as any).google.translate.TranslateElement(
               { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
               'google_translate_element_nav'
             );
           }
-          if (document.getElementById('google_translate_element_mobile')) {
+          if (mobileElem && (mobileElem.innerHTML === '' || !mobileElem.querySelector('.goog-te-gadget-simple'))) {
             new (window as any).google.translate.TranslateElement(
               { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
               'google_translate_element_mobile'
@@ -111,8 +114,18 @@ function Navbar() {
         script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
         script.async = true;
         document.body.appendChild(script);
-      } else if ((window as any).google && (window as any).google.translate) {
-        (window as any).googleTranslateElementInit();
+      } else {
+        if ((window as any).google && (window as any).google.translate) {
+          (window as any).googleTranslateElementInit();
+        } else {
+          const checkGoogle = setInterval(() => {
+            if ((window as any).google && (window as any).google.translate) {
+              (window as any).googleTranslateElementInit();
+              clearInterval(checkGoogle);
+            }
+          }, 100);
+          setTimeout(() => clearInterval(checkGoogle), 5000);
+        }
       }
     };
     addGoogleTranslate();
