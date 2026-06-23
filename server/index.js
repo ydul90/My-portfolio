@@ -17,26 +17,32 @@ app.use((req, res, next) => {
 // Support both local and production URLs
 const allowedOrigins = [
     'http://localhost:5173',
+    'http://127.0.0.1:5173',
     'http://localhost:3000',
+    'http://localhost:4173',
     'https://my-portfolio-new-c1387.web.app',
     'https://my-portfolio-new-c1387.firebaseapp.com',
-    'https://my-portfolio-7e3bd.web.app',
-    'https://my-portfolio-7e3bd.firebaseapp.com',
     process.env.FRONTEND_URL
 ].filter(Boolean);
 
 app.use(cors({
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+        // Allow all local development origins and your production domains
+        const isLocal = !origin || origin.includes('localhost') || origin.includes('127.0.0.1');
+        if (isLocal || allowedOrigins.indexOf(origin) !== -1) {
+            return callback(null, true);
         }
-        return callback(null, true);
+        const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
     }
 }));
 app.use(express.json({ limit: '10kb' }));
+
+// ADDED: Log every request
+app.use((req, res, next) => {
+    console.log(`[${new Date().toLocaleTimeString()}] ${req.method} request to ${req.url} from ${req.headers.origin}`);
+    next();
+});
 
 // 1. Simple Rate Limiting (Prevent Spam)
 const rateLimit = new Map();
@@ -167,9 +173,9 @@ app.post('/api/contact', async (req, res) => {
             accessKey: process.env.STATICFORMS_ACCESS_KEY,
             name: name,
             email: email,
-            subject: `New Portfolio Message from ${name}`,
+            subject: `Portfolio: Message from ${name}`,
             message: `Project Type: ${project_type}\n\nMessage: ${message}`,
-            replyTo: '@'
+            replyTo: email
         });
 
         if (response.data.success) {
@@ -182,11 +188,19 @@ app.post('/api/contact', async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Static Forms Error:", error.response ? error.response.data : error.message);
+        console.error("--- STATIC FORMS ERROR ---");
+        if (error.response) {
+            console.error("Status:", error.response.status);
+            console.error("Data:", JSON.stringify(error.response.data, null, 2));
+        } else {
+            console.error("Error Message:", error.message);
+        }
+        console.error("---------------------------");
+
         res.status(500).json({
             success: false,
             message: "Failed to send email via Static Forms.",
-            debug: error.message
+            debug: error.response ? error.response.data.message : error.message
         });
     }
 });

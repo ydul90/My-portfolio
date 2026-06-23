@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
-  Play,
   Menu,
   X,
   Star,
@@ -15,21 +14,12 @@ import {
   Smartphone,
   PenTool,
   Eye,
-  Globe,
-  Camera,
-  CircleDot,
-  Component,
   AtSign,
-  FileDown,
-  Lock,
-  LogOut,
-  Copy,
   Check,
-  User as UserIcon,
+  Copy,
+  Component,
 } from "lucide-react";
 import { LegalModal, PrivacyPolicyContent, TermsOfServiceContent } from "./Legal";
-import { auth, signInWithGoogle, logout } from "./firebase";
-import { onAuthStateChanged, User } from "firebase/auth";
 import heroImage from "./utils/image/image.png";
 import aboutImage from "./utils/image/images.png";
 import logo from "./utils/image/logo.png";
@@ -87,10 +77,9 @@ const Linkedin = (props: any) => (
 );
 
 /* ─────────────────────────── Navigation ─────────────────────────── */
-function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () => void, onLogout: () => void }) {
+function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -110,12 +99,11 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
     e.preventDefault();
     setMobileOpen(false);
 
-    // Small delay to allow menu closing animation to start
     setTimeout(() => {
-      const targetId = href.replace('#', '');
+      const targetId = href.replace("#", "");
       const element = document.getElementById(targetId);
       if (element) {
-        const offset = 80; // Navbar height
+        const offset = 80;
         const bodyRect = document.body.getBoundingClientRect().top;
         const elementRect = element.getBoundingClientRect().top;
         const elementPosition = elementRect - bodyRect;
@@ -123,7 +111,7 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
 
         window.scrollTo({
           top: offsetPosition,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }
     }, 100);
@@ -145,7 +133,7 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
           {/* Logo */}
           <a
             href="#home"
-            onClick={(e) => scrollToSection(e, '#home')}
+            onClick={(e) => scrollToSection(e, "#home")}
             className="flex items-center gap-3 group"
           >
             <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border border-white/10">
@@ -176,58 +164,8 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
             ))}
           </div>
 
-          {/* Auth & CTA */}
+          {/* CTA */}
           <div className="hidden md:flex items-center gap-6">
-            {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 text-white group"
-                >
-                  {user.photoURL ? (
-                    <img src={user.photoURL} alt={user.displayName || ""} className="w-8 h-8 rounded-full border border-border" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                      <UserIcon className="w-4 h-4 text-accent" />
-                    </div>
-                  )}
-                  <ChevronDown className={`w-4 h-4 text-text-dim group-hover:text-white transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                <AnimatePresence>
-                  {userMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-xl shadow-xl py-2 overflow-hidden"
-                    >
-                      <div className="px-4 py-2 border-b border-border mb-1">
-                        <p className="text-white text-xs font-medium truncate">{user.displayName}</p>
-                        <p className="text-text-dim text-[10px] truncate">{user.email}</p>
-                      </div>
-                      <button
-                        onClick={() => {
-                          onLogout();
-                          setUserMenuOpen(false);
-                        }}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-white/5 transition-colors"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <button
-                onClick={onSignIn}
-                className="text-white text-sm font-medium hover:text-accent transition-colors"
-              >
-                Sign In
-              </button>
-            )}
             <a
               href="#contact"
               className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/20"
@@ -251,7 +189,6 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
       <AnimatePresence>
         {mobileOpen && (
           <div className="fixed inset-0 z-[100] md:hidden">
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -260,7 +197,6 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
 
-            {/* Menu Content */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -268,15 +204,6 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
               className="absolute top-20 left-0 right-0 bg-bg/95 backdrop-blur-xl border-b border-border overflow-hidden"
             >
               <div className="px-6 py-8 flex flex-col gap-4">
-                {user && (
-                  <div className="flex items-center gap-3 pb-4 border-b border-border mb-2">
-                    <img src={user.photoURL || ""} className="w-10 h-10 rounded-full" />
-                    <div>
-                      <p className="text-white text-sm font-medium">{user.displayName}</p>
-                      <button onClick={onLogout} className="text-red-400 text-xs">Sign Out</button>
-                    </div>
-                  </div>
-                )}
                 {links.map((link) => (
                   <a
                     key={link.label}
@@ -287,20 +214,9 @@ function Navbar({ user, onSignIn, onLogout }: { user: User | null, onSignIn: () 
                     {link.label}
                   </a>
                 ))}
-                {!user && (
-                  <button
-                    onClick={() => {
-                      onSignIn();
-                      setMobileOpen(false);
-                    }}
-                    className="text-white text-lg font-medium text-left hover:text-accent transition-colors py-2 w-full block"
-                  >
-                    Sign In
-                  </button>
-                )}
                 <a
                   href="#contact"
-                  onClick={(e) => scrollToSection(e, '#contact')}
+                  onClick={(e) => scrollToSection(e, "#contact")}
                   className="inline-flex items-center justify-center gap-2 bg-accent text-white text-sm font-medium px-6 py-3 rounded-full mt-2"
                 >
                   Let&apos;s Talk
@@ -342,14 +258,12 @@ function Hero() {
       id="home"
       className="relative min-h-screen flex items-center overflow-hidden scroll-mt-20"
     >
-      {/* Hero Background Image */}
       <div className="absolute inset-0 z-0">
         <img
           src={heroImage}
           alt="Hero Background"
           className="w-full h-full object-cover"
         />
-        {/* Subtle overlay to ensure text readability */}
         <div className="absolute inset-0 bg-black/30" />
       </div>
 
@@ -358,7 +272,6 @@ function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20 w-full">
         <div className="max-w-3xl">
-          {/* Pill Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -371,7 +284,6 @@ function Hero() {
             </span>
           </motion.div>
 
-          {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -387,7 +299,6 @@ function Hero() {
             <span className="font-serif italic text-accent">Software Engineer</span>
           </motion.h1>
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -399,7 +310,6 @@ function Hero() {
             solutions.
           </motion.p>
 
-          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -415,13 +325,18 @@ function Hero() {
             </a>
             <button
               onClick={() => {
-                const element = document.getElementById('contact');
+                const element = document.getElementById("contact");
                 if (element) {
-                  element.scrollIntoView({ behavior: 'smooth' });
-                  // Find the textarea and pre-fill it
-                  const messageArea = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
-                  const projectType = document.querySelector('input[name="project_type"]') as HTMLInputElement;
-                  if (messageArea) messageArea.value = "Hello! I am interested in your work and would like to request a copy of your CV. Thank you!";
+                  element.scrollIntoView({ behavior: "smooth" });
+                  const messageArea = document.querySelector(
+                    'textarea[name="message"]'
+                  ) as HTMLTextAreaElement;
+                  const projectType = document.querySelector(
+                    'input[name="project_type"]'
+                  ) as HTMLInputElement;
+                  if (messageArea)
+                    messageArea.value =
+                      "Hello! I am interested in your work and would like to request a copy of your CV. Thank you!";
                   if (projectType) projectType.value = "CV Request";
                 }
               }}
@@ -434,7 +349,6 @@ function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -465,13 +379,12 @@ function About() {
     video.playbackRate = 0.5;
 
     const handleTimeUpdate = () => {
-      // 0.5 seconds before the video ends, start a quick fade out
       if (video.currentTime > video.duration - 0.5 && !isLowOpacity) {
         setIsLowOpacity(true);
         setTimeout(() => {
           video.currentTime = 0;
           setIsLowOpacity(false);
-        }, 400); // Wait for fade, reset, then fade back in
+        }, 400);
       }
     };
 
@@ -481,7 +394,6 @@ function About() {
 
   return (
     <section id="about" className="relative py-28 lg:py-36 overflow-hidden scroll-mt-20">
-      {/* Video Background */}
       <div className="absolute inset-0 z-0 bg-black">
         <motion.video
           ref={videoRef}
@@ -496,13 +408,11 @@ function About() {
         >
           <source src={aboutVideo} type="video/mp4" />
         </motion.video>
-        {/* Darker overlay for better text contrast */}
         <div className="absolute inset-0 bg-black/60" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Left: Text */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -554,7 +464,6 @@ function About() {
             </div>
           </motion.div>
 
-          {/* Right: Stats + Image area */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -562,7 +471,6 @@ function About() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="relative"
           >
-            {/* Decorative frame */}
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-surface border border-border">
               <img
                 src={aboutImage}
@@ -582,34 +490,6 @@ function About() {
   );
 }
 
-/* ─────────────────────────── UI Components ─────────────────────────── */
-function ProtectedOverlay({ onSignIn }: { onSignIn: () => void }) {
-  return (
-    <div className="absolute inset-0 z-40 backdrop-blur-md bg-bg/40 flex items-center justify-center p-6 text-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        className="max-w-sm bg-surface border border-border p-8 rounded-3xl shadow-2xl"
-      >
-        <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <Lock className="w-8 h-8 text-accent" />
-        </div>
-        <h3 className="text-2xl font-medium text-white mb-3">Content Locked</h3>
-        <p className="text-text-muted text-sm mb-8 leading-relaxed">
-          Please sign in with your Google account to view my full work history and send me messages.
-        </p>
-        <button
-          onClick={onSignIn}
-          className="w-full inline-flex items-center justify-center gap-3 bg-accent hover:bg-accent-hover text-white font-medium px-8 py-4 rounded-full transition-all duration-300"
-        >
-          Sign In with Google
-          <ArrowRight className="w-5 h-5" />
-        </button>
-      </motion.div>
-    </div>
-  );
-}
-
 /* ─────────────────────────── Work ─────────────────────────── */
 const projects = [
   {
@@ -621,15 +501,19 @@ const projects = [
     color: "#e85d2b",
     image: lguAppImage,
     link: "https://www.figma.com/design/Do23if3MVkVNSg4AdZEczJ/Event-Management-App?node-id=222-311&t=xSPEF9LAbs7ZBzsb-1",
+    isOngoing: true,
+    status: "Updating",
   },
   {
     title: "LGU Ormoc Event System",
-    category: "Web Design",
+    category: "Web System",
     description:
       "A centralized web-based platform for LGU Ormoc administrators to plan, monitor, and generate comprehensive reports for city-wide government events.",
-    tags: ["Admin Portal", "Web Design", "Analytics"],
+    tags: ["Admin Portal", "Development", "Analytics"],
     color: "#c75a3a",
     link: "https://paleturquoise-cheetah-627304.hostingersite.com/public/login.php",
+    isOngoing: true,
+    status: "Fixing",
   },
   {
     title: "MediCare Health Portal",
@@ -651,12 +535,10 @@ const projects = [
   },
 ];
 
-function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => void }) {
+function Work() {
   return (
     <section id="work" className="relative py-28 lg:py-36 bg-gradient-to-b from-[#e85d2b]/15 to-black min-h-[600px] scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-500 relative">
-        {!isLoggedIn && <ProtectedOverlay onSignIn={onSignIn} />}
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -667,7 +549,7 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
           <span className="text-accent text-xs font-medium tracking-[0.2em] uppercase mb-4 block">
             Selected Work
           </span>
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div className="flex flex-col sm:row sm:items-end sm:justify-between gap-6">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-sans font-medium text-white leading-tight">
               Projects that
               <br />
@@ -684,16 +566,8 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
           </div>
         </motion.div>
 
-        {/* Projects Grid */}
         <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
           {projects.map((project, i) => {
-            const handleCardClick = (e: React.MouseEvent) => {
-              if (!isLoggedIn) {
-                e.preventDefault();
-                onSignIn();
-              }
-            };
-
             const Card = (
               <motion.article
                 key={project.title}
@@ -703,7 +577,6 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
                 transition={{ duration: 0.6, delay: i * 0.1 }}
                 className="group relative bg-surface border border-border rounded-2xl overflow-hidden hover:border-text-dim/50 transition-all duration-500 h-full"
               >
-                {/* Project visual */}
                 <div
                   className="aspect-[16/10] relative overflow-hidden"
                   style={{ backgroundColor: `${project.color}08` }}
@@ -711,7 +584,7 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
                   {project.isOngoing ? (
                     <div className="absolute top-4 left-4 z-20">
                       <span className="bg-accent/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/20">
-                        Ongoing
+                        {(project as any).status || "Ongoing"}
                       </span>
                     </div>
                   ) : (
@@ -748,7 +621,6 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-6 lg:p-8">
                   <p className="text-accent text-xs font-medium tracking-wider uppercase mb-2">
                     {project.category}
@@ -777,7 +649,6 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
               <a
                 key={project.title}
                 href={project.link}
-                onClick={handleCardClick}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block h-full"
@@ -785,7 +656,7 @@ function Work({ isLoggedIn, onSignIn }: { isLoggedIn: boolean, onSignIn: () => v
                 {Card}
               </a>
             ) : (
-              <div key={project.title} onClick={handleCardClick} className="h-full cursor-pointer">
+              <div key={project.title} className="h-full">
                 {Card}
               </div>
             );
@@ -840,7 +711,6 @@ function Services() {
   return (
     <section id="services" className="relative py-28 lg:py-36 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -858,7 +728,6 @@ function Services() {
           </h2>
         </motion.div>
 
-        {/* Services Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, i) => (
             <motion.div
@@ -892,19 +761,19 @@ const testimonials = [
     quote:
       "Ludy has a rare ability to bridge the gap between design and engineering. The code is as clean as the UI is beautiful.",
     author: "Anonymous",
-    role: "Sotware Engineer",
+    role: "Software Engineer",
   },
   {
     quote:
       "Working with Ludy was a game-changer. They didn't just design the product; they built it with technical precision and a deep focus on UX.",
     author: "Anonymous",
-    role: "Sotware Engineer",
+    role: "Software Engineer",
   },
   {
     quote:
       "The design system and technical architecture Ludy implemented has become the backbone of our product, saving us months of development time.",
     author: "Anonymous",
-    role: "Sotware Engineer",
+    role: "Software Engineer",
   },
 ];
 
@@ -965,13 +834,14 @@ function Testimonials() {
 }
 
 /* ─────────────────────────── Contact ─────────────────────────── */
-function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }) {
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid-email">("idle");
+function Contact() {
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "success" | "error" | "invalid-email"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [copied, setCopied] = useState(false);
 
   const emailAddress = "conagludybongbsitpittabango@gmail.com";
-  // Gmail-specific compose link
   const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}`;
 
   const copyToClipboard = (e: React.MouseEvent) => {
@@ -982,34 +852,36 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const sanitize = (str: string) => {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;")
+      .trim();
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Clear previous status
     setStatus("idle");
     setErrorMessage("");
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const name = (formData.get("name")?.toString() || "").trim();
-    const email = user?.email || (formData.get("email")?.toString() || "").trim();
-    const message = (formData.get("message")?.toString() || "").trim();
+    const name = sanitize((formData.get("name")?.toString() || ""));
+    const email = sanitize((formData.get("email")?.toString() || ""));
+    const message = sanitize((formData.get("message")?.toString() || ""));
     const honeypot = formData.get("website")?.toString();
 
-    // 1. Honeypot check (security)
-    if (honeypot) {
-      console.warn("Honeypot triggered");
-      return;
-    }
+    if (honeypot) return;
 
-    // 2. Length validation
     if (name.length > 100 || message.length > 2000) {
       setStatus("error");
       setErrorMessage("Message is too long.");
       return;
     }
 
-    // 3. Simple validation
     if (!name || !email || !message) {
       setStatus("error");
       form.reportValidity();
@@ -1019,20 +891,16 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
     setStatus("sending");
 
     try {
-      // Use environment variable for API URL, fallback to production URL
-      const API_URL = import.meta.env.VITE_API_URL || "https://my-portfolio-lnv3.onrender.com";
-
-      const response = await fetch(`${API_URL}/api/contact`, {
+      const response = await fetch("https://api.staticforms.dev/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          accessKey: "sf_a0b4037c151184ddc7e0b0be",
           name,
           email,
-          project_type: formData.get("project_type"),
-          message,
-          website: honeypot,
+          subject: "ydul submission",
+          message: `Project Type: ${formData.get("project_type")}\n\n${message}`,
+          replyTo: "@",
         }),
       });
 
@@ -1043,12 +911,12 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
         form.reset();
       } else {
         setStatus("error");
-        setErrorMessage(data.debug || data.message || "Failed to send message.");
+        setErrorMessage(data.message || "Failed to send message.");
       }
     } catch (error) {
       console.error("Fetch error:", error);
       setStatus("error");
-      setErrorMessage("The server is not responding. Please ensure your backend is running.");
+      setErrorMessage("Could not connect to the email service. Please check your internet.");
     }
   };
 
@@ -1056,7 +924,6 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
     <section id="contact" className="relative py-28 lg:py-36 min-h-[600px] scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* Left */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -1080,15 +947,9 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
             <div className="space-y-5">
               <div className="relative group/item">
                 <a
-                  href={user ? gmailLink : "#"}
-                  target={user ? "_blank" : "_self"}
+                  href={gmailLink}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => {
-                    if (!user) {
-                      e.preventDefault();
-                      onSignIn();
-                    }
-                  }}
                   className="flex items-center gap-4 group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
@@ -1099,20 +960,17 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
                       Email
                     </p>
                     <p className="text-white text-sm font-medium group-hover:text-accent transition-colors truncate">
-                      {user ? emailAddress : "Sign in to view email"}
+                      {emailAddress}
                     </p>
                   </div>
                 </a>
-
-                {user && (
-                  <button
-                    onClick={copyToClipboard}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-text-dim hover:text-white transition-colors"
-                    title="Copy to clipboard"
-                  >
-                    {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                )}
+                <button
+                  onClick={copyToClipboard}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-text-dim hover:text-white transition-colors"
+                  title="Copy to clipboard"
+                >
+                  {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                </button>
               </div>
 
               <div className="flex items-center gap-4">
@@ -1130,7 +988,6 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
               </div>
             </div>
 
-            {/* Socials */}
             <div className="flex items-center gap-3 mt-10">
               {[
                 { Icon: Facebook, label: "Facebook", href: "https://facebook.com/itsludian" },
@@ -1155,7 +1012,6 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
             </div>
           </motion.div>
 
-          {/* Right: Form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -1163,14 +1019,7 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-surface border border-border rounded-2xl p-8 lg:p-10 relative overflow-hidden"
           >
-            {!user && (
-              <div
-                className="absolute inset-0 z-10 cursor-pointer bg-transparent"
-                onClick={onSignIn}
-              />
-            )}
-            <form onSubmit={handleSubmit} className={`space-y-6 ${!user ? 'opacity-50' : ''}`}>
-              {/* Honeypot field - hidden from users, only visible to bots */}
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="hidden" aria-hidden="true">
                 <input type="text" name="website" tabIndex={-1} autoComplete="off" />
               </div>
@@ -1184,7 +1033,6 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
                     type="text"
                     name="name"
                     required
-                    defaultValue={user?.displayName || ""}
                     maxLength={100}
                     placeholder="John Doe"
                     className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-white text-sm placeholder:text-text-dim focus:outline-none focus:border-accent transition-colors"
@@ -1194,21 +1042,14 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
                   <label className="block text-text-dim text-xs uppercase tracking-wider mb-2">
                     Email Address
                   </label>
-                  {user ? (
-                    <div className="w-full bg-bg/50 border border-border/50 rounded-xl px-4 py-3 text-text-dim text-sm flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                      {user.email}
-                    </div>
-                  ) : (
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      maxLength={150}
-                      placeholder="email@example.com"
-                      className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-white text-sm placeholder:text-text-dim focus:outline-none focus:border-accent transition-colors"
-                    />
-                  )}
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    maxLength={150}
+                    placeholder="email@example.com"
+                    className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-white text-sm placeholder:text-text-dim focus:outline-none focus:border-accent transition-colors"
+                  />
                 </div>
               </div>
               <div>
@@ -1250,11 +1091,6 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
                   Message sent successfully!
                 </p>
               )}
-              {status === "invalid-email" && (
-                <p className="text-red-500 text-sm text-center font-medium">
-                  Please enter a valid email address.
-                </p>
-              )}
               {status === "error" && (
                 <p className="text-red-500 text-sm text-center font-medium">
                   {errorMessage || "Something went wrong. Please try again."}
@@ -1269,23 +1105,19 @@ function Contact({ user, onSignIn }: { user: User | null, onSignIn: () => void }
 }
 
 /* ─────────────────────────── Footer ─────────────────────────── */
-function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPrivacy: () => void, onOpenTerms: () => void, isLoggedIn: boolean, onSignIn: () => void }) {
-  const emailAddress = "conagludybongbsitpittabango@gmail.com";
-  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}`;
-
-  const handleEmailClick = (e: React.MouseEvent) => {
-    if (!isLoggedIn) {
-      e.preventDefault();
-      onSignIn();
-    }
-  };
-
+function Footer({
+  onOpenPrivacy,
+  onOpenTerms,
+}: {
+  onOpenPrivacy: () => void;
+  onOpenTerms: () => void;
+}) {
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const targetId = href.replace('#', '');
+    const targetId = href.replace("#", "");
     const element = document.getElementById(targetId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -1293,7 +1125,6 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
     <footer className="relative border-t border-border pt-20 pb-12 bg-bg overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          {/* Brand Section */}
           <div className="md:col-span-5">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-white/10">
@@ -1314,7 +1145,6 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
             </p>
           </div>
 
-          {/* Navigation Section */}
           <div className="md:col-span-3">
             <h4 className="text-white text-xs font-bold tracking-[0.2em] uppercase mb-8">
               Navigation
@@ -1334,7 +1164,6 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
             </ul>
           </div>
 
-          {/* Connect Section */}
           <div className="md:col-span-4">
             <h4 className="text-white text-xs font-bold tracking-[0.2em] uppercase mb-8">
               Let&apos;s Connect
@@ -1343,7 +1172,6 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
               Have an idea? Let&apos;s turn it into something great.
             </p>
 
-            {/* Socials */}
             <div className="flex items-center gap-3">
               {[
                 { Icon: Facebook, label: "Facebook", href: "https://facebook.com/itsludian" },
@@ -1369,9 +1197,7 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="relative pt-12 pb-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6 mb-12">
-          {/* Watermark Signature centered behind the text - Made significantly larger with stronger gradient and higher visibility */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
             <h2 className="text-[20vw] sm:text-[15vw] font-serif italic bg-gradient-to-b from-white to-black bg-clip-text text-transparent select-none tracking-tighter whitespace-nowrap opacity-5">
               Ludy Bong
@@ -1403,22 +1229,12 @@ function Footer({ onOpenPrivacy, onOpenTerms, isLoggedIn, onSignIn }: { onOpenPr
 
 /* ─────────────────────────── App ─────────────────────────── */
 export default function App() {
-  const [activeModal, setActiveModal] = useState<"privacy" | "terms" | "auth" | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [activeModal, setActiveModal] = useState<"privacy" | "terms" | null>(null);
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-
-    // 1. Disable Right-Click
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
-
-    // 2. Disable common DevTools shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         e.key === "F12" ||
@@ -1433,134 +1249,25 @@ export default function App() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      unsubscribe();
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
-  const handleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-      setActiveModal(null);
-    } catch (error: any) {
-      console.error("Sign in failed", error);
-      alert(`Sign in failed: ${error.message || "Unknown error"}`);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-bg text-text">
-      <Navbar user={user} onSignIn={() => setActiveModal("auth")} onLogout={handleLogout} />
+      <Navbar />
       <Hero />
       <About />
-      <Work isLoggedIn={!!user} onSignIn={() => setActiveModal("auth")} />
+      <Work />
       <Services />
       <Testimonials />
-      <Contact user={user} onSignIn={() => setActiveModal("auth")} />
+      <Contact />
       <Footer
-        isLoggedIn={!!user}
-        onSignIn={() => setActiveModal("auth")}
         onOpenPrivacy={() => setActiveModal("privacy")}
         onOpenTerms={() => setActiveModal("terms")}
       />
 
-      {/* Auth Modal */}
-      <AnimatePresence>
-        {activeModal === "auth" && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setActiveModal(null)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-md bg-surface border border-border rounded-3xl shadow-2xl overflow-hidden"
-            >
-              <div className="p-8 lg:p-10 text-center">
-                <button
-                  onClick={() => setActiveModal(null)}
-                  className="absolute top-6 right-6 text-text-dim hover:text-white transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-
-                <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <UserIcon className="w-8 h-8 text-accent" />
-                </div>
-
-                <h2 className="text-3xl font-medium text-white mb-2">Welcome Back</h2>
-                <p className="text-text-muted text-sm mb-10">
-                  Sign in to access my full portfolio, projects, and get in touch.
-                </p>
-
-                <div className="space-y-4">
-                  <button
-                    onClick={handleSignIn}
-                    className="w-full flex items-center justify-center gap-4 bg-white text-black font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:bg-white/90"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                      <path
-                        fill="currentColor"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                      />
-                    </svg>
-                    Continue with Google
-                  </button>
-
-                  <div className="relative py-4">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-border" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-surface px-4 text-text-dim tracking-widest">Secure Sign In</span>
-                    </div>
-                  </div>
-
-                  <p className="text-[10px] text-text-dim leading-relaxed">
-                    By continuing, you agree to my Terms of Service and Privacy Policy.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Modals */}
       <LegalModal
         isOpen={activeModal === "privacy"}
         onClose={() => setActiveModal(null)}
