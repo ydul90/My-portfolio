@@ -51,78 +51,9 @@ body {
   background: #444;
 }
 
-/* ─────────────────────────── Google Translate ─────────────────────────── */
-/* Extremely aggressive hiding of ONLY the Top Banner */
-.goog-te-banner-frame.skiptranslate,
-.goog-te-banner-frame,
-.goog-te-banner,
-#goog-gt-tt,
-#goog-gt-vt,
-.goog-te-balloon-frame,
-iframe.goog-te-banner-frame {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  width: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Ensure the Dropdown Menu (goog-te-menu-frame) is visible */
-iframe.goog-te-menu-frame,
-.goog-te-menu-frame {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 999999999 !important;
-}
-
-/* Force the page to stay at the top and not jump down */
-html,
-html[style] {
-  top: 0 !important;
-  margin-top: 0 !important;
-}
-
-body,
-body[style] {
-  top: 0 !important;
-  position: static !important;
-}
-
-/* Hide the "Powered by Google" and clean up the dropdown */
-.goog-te-gadget {
-  font-family: 'Inter', sans-serif !important;
-  color: transparent !important;
-}
-
-.goog-te-gadget .goog-te-combo {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #a3a3a3 !important;
-  border-radius: 9999px !important;
-  padding: 4px 12px !important;
-  font-size: 12px !important;
-  outline: none !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-}
-
-.goog-te-gadget .goog-te-combo:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #ffffff !important;
-}
-
-.goog-te-gadget span {
-  display: none !important;
-}
-
-.goog-te-gadget img {
-  display: none !important;
-}
-
-#google_translate_element_nav,
-#google_translate_element_mobile {
+#reverso-localize-widget,
+#reverso-localize-widget-mobile {
   display: inline-flex !important;
   align-items: center !important;
 }
+

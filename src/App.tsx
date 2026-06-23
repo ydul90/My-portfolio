@@ -86,59 +86,6 @@ function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
 
-    // Initialize Google Translate
-    const addGoogleTranslate = () => {
-      (window as any).googleTranslateElementInit = () => {
-        const initWidget = () => {
-          const navElem = document.getElementById('google_translate_element_nav');
-          const mobileElem = document.getElementById('google_translate_element_mobile');
-
-          if (navElem && (navElem.innerHTML === '' || !navElem.querySelector('.goog-te-gadget-simple'))) {
-            new (window as any).google.translate.TranslateElement(
-              {
-                pageLanguage: 'en',
-                layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-              },
-              'google_translate_element_nav'
-            );
-          }
-          if (mobileElem && (mobileElem.innerHTML === '' || !mobileElem.querySelector('.goog-te-gadget-simple'))) {
-            new (window as any).google.translate.TranslateElement(
-              {
-                pageLanguage: 'en',
-                layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-              },
-              'google_translate_element_mobile'
-            );
-          }
-        };
-        // Use a short timeout to ensure the DOM nodes are ready
-        setTimeout(initWidget, 100);
-      };
-
-      if (!document.querySelector('script[src*="translate.google.com"]')) {
-        const script = document.createElement("script");
-        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-        script.async = true;
-        document.body.appendChild(script);
-      } else {
-        if ((window as any).google && (window as any).google.translate) {
-          (window as any).googleTranslateElementInit();
-        } else {
-          const checkGoogle = setInterval(() => {
-            if ((window as any).google && (window as any).google.translate) {
-              (window as any).googleTranslateElementInit();
-              clearInterval(checkGoogle);
-            }
-          }, 100);
-          setTimeout(() => clearInterval(checkGoogle), 5000);
-        }
-      }
-    };
-    addGoogleTranslate();
-
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -223,7 +170,7 @@ function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 hover:bg-surface/60 transition-all cursor-pointer">
               <Languages className="w-4 h-4 text-text-dim pointer-events-none" />
-              <div id="google_translate_element_nav" className="pointer-events-auto"></div>
+              <div id="reverso-localize-widget" className="pointer-events-auto"></div>
             </div>
             <a
               href="#contact"
@@ -284,7 +231,7 @@ function Navbar() {
 
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface/40 mt-2 cursor-pointer">
                   <Languages className="w-5 h-5 text-text-dim pointer-events-none" />
-                  <div id="google_translate_element_mobile" className="pointer-events-auto"></div>
+                  <div id="reverso-localize-widget-mobile" className="pointer-events-auto"></div>
                 </div>
 
                 {/* Mobile Socials */}
@@ -1300,22 +1247,6 @@ export default function App() {
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
 
-    // Auto-remove Google Translate Top Bar and fix layout
-    const killGoogleBar = () => {
-      const banner = document.querySelector(".goog-te-banner-frame") as HTMLElement;
-      if (banner) {
-        banner.style.setProperty("display", "none", "important");
-      }
-      // Reset body and html offsets that Google forces
-      document.body.style.setProperty("top", "0px", "important");
-      document.body.style.setProperty("position", "static", "important");
-      document.documentElement.style.setProperty("margin-top", "0px", "important");
-    };
-
-    const observer = new MutationObserver(killGoogleBar);
-    observer.observe(document.documentElement, { attributes: true, subtree: true });
-    const interval = setInterval(killGoogleBar, 100);
-
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -1333,8 +1264,6 @@ export default function App() {
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
-      observer.disconnect();
-      clearInterval(interval);
     };
   }, []);
 
