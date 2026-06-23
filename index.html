@@ -6,7 +6,7 @@
     <title>Software Engineer & UX Designer</title>
     <link rel="icon" type="image/png" href="/src/utils/image/logo.png" />
     <meta name="theme-color" content="#e85d2b" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.reverso.net; style-src 'self' 'unsafe-inline' https://*.reverso.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.reverso.net https://api.staticforms.dev; frame-src 'self' https://*.github.io https://*.reverso.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.reverso.net https://cdn.gtranslate.net; style-src 'self' 'unsafe-inline' https://*.reverso.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://*.reverso.net https://cdn.gtranslate.net https://api.staticforms.dev; frame-src 'self' https://*.github.io https://*.reverso.net;">
     <meta name="referrer" content="no-referrer-when-downgrade">
     <link rel="apple-touch-icon" href="/src/utils/image/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,8 +15,9 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Reverso Localize Script - Replace YOUR_PROJECT_ID with your actual ID -->
-    <script src="https://localize.reverso.net/script/YOUR_PROJECT_ID.js" async></script>
+    <!-- GTranslate Widget Configuration -->
+    <script>window.gtranslateSettings = {"default_language":"en","detect_browser_language":true,"wrapper_selector":".gtranslate_wrapper","flag_size":16,"alt_flags":{"en":"usa"}}</script>
+    <script src="https://cdn.gtranslate.net/widgets/latest/dwl.js" defer></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

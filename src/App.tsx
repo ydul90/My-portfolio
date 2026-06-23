@@ -170,7 +170,7 @@ function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 hover:bg-surface/60 transition-all cursor-pointer">
               <Languages className="w-4 h-4 text-text-dim pointer-events-none" />
-              <div id="reverso-localize-widget" className="pointer-events-auto"></div>
+              <div className="gtranslate_wrapper pointer-events-auto"></div>
             </div>
             <a
               href="#contact"
@@ -231,7 +231,7 @@ function Navbar() {
 
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface/40 mt-2 cursor-pointer">
                   <Languages className="w-5 h-5 text-text-dim pointer-events-none" />
-                  <div id="reverso-localize-widget-mobile" className="pointer-events-auto"></div>
+                  <div className="gtranslate_wrapper pointer-events-auto"></div>
                 </div>
 
                 {/* Mobile Socials */}

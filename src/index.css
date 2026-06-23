@@ -51,9 +51,33 @@ body {
   background: #444;
 }
 
-#reverso-localize-widget,
-#reverso-localize-widget-mobile {
+/* ─────────────────────────── GTranslate Styling ─────────────────────────── */
+.gtranslate_wrapper {
   display: inline-flex !important;
   align-items: center !important;
+}
+
+/* Custom styling for the dropdown to match the theme */
+.gtranslate_wrapper select {
+  background: transparent !important;
+  border: none !important;
+  color: #a3a3a3 !important;
+  font-size: 13px !important;
+  font-family: 'Inter', sans-serif !important;
+  outline: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+.gtranslate_wrapper select:hover {
+  color: #ffffff !important;
+}
+
+/* Hide GTranslate footer/branding if it appears */
+.gt_container_at, .gt-powered-by {
+  display: none !important;
 }
 
