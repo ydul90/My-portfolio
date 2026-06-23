@@ -50,3 +50,46 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #444;
 }
+
+/* Google Translate Styles */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+.goog-te-gadget-icon {
+  display: none !important;
+}
+
+.goog-te-gadget-simple {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.goog-te-menu-value {
+  color: #737373 !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.goog-te-menu-value span {
+  display: none !important;
+}
+
+.goog-te-menu-value:after {
+  content: 'Translate' !important;
+  color: #737373 !important;
+}
+
+.goog-te-menu-value:hover:after {
+  color: #f5f5f5 !important;
+}

@@ -18,6 +18,7 @@ import {
   Check,
   Copy,
   Component,
+  Languages,
 } from "lucide-react";
 import { LegalModal, PrivacyPolicyContent, TermsOfServiceContent } from "./Legal";
 import heroImage from "./utils/image/image.png";
@@ -84,6 +85,24 @@ function Navbar() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
+
+    // Initialize Google Translate
+    const addGoogleTranslate = () => {
+      if (!(window as any).googleTranslateElementInit) {
+        (window as any).googleTranslateElementInit = () => {
+          new (window as any).google.translate.TranslateElement(
+            { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
+            'google_translate_element_nav'
+          );
+        };
+        const script = document.createElement("script");
+        script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    };
+    addGoogleTranslate();
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -166,6 +185,10 @@ function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-6">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 hover:bg-surface/60 transition-all">
+              <Languages className="w-4 h-4 text-text-dim" />
+              <div id="google_translate_element_nav"></div>
+            </div>
             <a
               href="#contact"
               className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/20"
