@@ -106,7 +106,8 @@ function Navbar() {
             );
           }
         };
-        initWidget();
+        // Use a short timeout to ensure the DOM nodes are ready
+        setTimeout(initWidget, 100);
       };
 
       if (!document.querySelector('script[src*="translate.google.com"]')) {
@@ -212,9 +213,9 @@ function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-6">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 hover:bg-surface/60 transition-all">
-              <Languages className="w-4 h-4 text-text-dim" />
-              <div id="google_translate_element_nav"></div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 hover:bg-surface/60 transition-all cursor-pointer">
+              <Languages className="w-4 h-4 text-text-dim pointer-events-none" />
+              <div id="google_translate_element_nav" className="pointer-events-auto"></div>
             </div>
             <a
               href="#contact"
@@ -273,9 +274,9 @@ function Navbar() {
                   <ArrowRight className="w-4 h-4" />
                 </a>
 
-                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface/40 mt-2">
-                  <Languages className="w-5 h-5 text-text-dim" />
-                  <div id="google_translate_element_mobile"></div>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface/40 mt-2 cursor-pointer">
+                  <Languages className="w-5 h-5 text-text-dim pointer-events-none" />
+                  <div id="google_translate_element_mobile" className="pointer-events-auto"></div>
                 </div>
 
                 {/* Mobile Socials */}
