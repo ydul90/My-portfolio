@@ -88,17 +88,24 @@ function Navbar() {
 
     // Initialize Google Translate
     const addGoogleTranslate = () => {
-      if (!(window as any).googleTranslateElementInit) {
-        (window as any).googleTranslateElementInit = () => {
+      // Always ensure the initialization function exists
+      (window as any).googleTranslateElementInit = () => {
+        if (document.getElementById('google_translate_element_nav')) {
           new (window as any).google.translate.TranslateElement(
             { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
             'google_translate_element_nav'
           );
-        };
+        }
+      };
+
+      if (!document.querySelector('script[src*="translate.google.com"]')) {
         const script = document.createElement("script");
-        script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
         script.async = true;
         document.body.appendChild(script);
+      } else if ((window as any).google && (window as any).google.translate) {
+        // If script already exists, try to re-init
+        (window as any).googleTranslateElementInit();
       }
     };
     addGoogleTranslate();
