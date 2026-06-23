@@ -24,7 +24,7 @@ import heroImage from "./utils/image/image.png";
 import aboutImage from "./utils/image/images.png";
 import logo from "./utils/image/logo.png";
 import lguAppImage from "./utils/image/My work/1.jpg";
-import aboutVideo from "./utils/mp4/meteor shower.mp4";
+import aboutVideo from "./utils/mp4/meteor-shower.mp4";
 
 /* ─────────────────────────── Custom Brand Icons ─────────────────────────── */
 const Facebook = (props: any) => (
