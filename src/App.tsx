@@ -88,14 +88,22 @@ function Navbar() {
 
     // Initialize Google Translate
     const addGoogleTranslate = () => {
-      // Always ensure the initialization function exists
       (window as any).googleTranslateElementInit = () => {
-        if (document.getElementById('google_translate_element_nav')) {
-          new (window as any).google.translate.TranslateElement(
-            { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
-            'google_translate_element_nav'
-          );
-        }
+        const initWidget = () => {
+          if (document.getElementById('google_translate_element_nav')) {
+            new (window as any).google.translate.TranslateElement(
+              { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
+              'google_translate_element_nav'
+            );
+          }
+          if (document.getElementById('google_translate_element_mobile')) {
+            new (window as any).google.translate.TranslateElement(
+              { pageLanguage: 'en', layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE },
+              'google_translate_element_mobile'
+            );
+          }
+        };
+        initWidget();
       };
 
       if (!document.querySelector('script[src*="translate.google.com"]')) {
@@ -104,7 +112,6 @@ function Navbar() {
         script.async = true;
         document.body.appendChild(script);
       } else if ((window as any).google && (window as any).google.translate) {
-        // If script already exists, try to re-init
         (window as any).googleTranslateElementInit();
       }
     };
@@ -252,6 +259,11 @@ function Navbar() {
                   Let&apos;s Talk
                   <ArrowRight className="w-4 h-4" />
                 </a>
+
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface/40 mt-2">
+                  <Languages className="w-5 h-5 text-text-dim" />
+                  <div id="google_translate_element_mobile"></div>
+                </div>
 
                 {/* Mobile Socials */}
                 <div className="flex items-center gap-4 pt-6 border-t border-border mt-4">
