@@ -24,7 +24,7 @@ import heroImage from "./utils/image/image.png";
 import aboutImage from "./utils/image/images.png";
 import logo from "./utils/image/logo.png";
 import lguAppImage from "./utils/image/My work/1.jpg";
-import aboutVideo from "./utils/mp4/meteor-shower.mp4";
+import aboutVideo from "./utils/mp4/meteor shower.mp4";
 
 /* ─────────────────────────── Custom Brand Icons ─────────────────────────── */
 const Facebook = (props: any) => (
@@ -546,16 +546,18 @@ function Work() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <span className="text-accent text-xs font-medium tracking-[0.2em] uppercase mb-4 block">
-            Selected Work
-          </span>
-          <div className="flex flex-col sm:row sm:items-end sm:justify-between gap-6">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-sans font-medium text-white leading-tight">
-              Projects that
-              <br />
-              <span className="font-serif italic text-accent">speak</span> for
-              themselves
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+            <div>
+              <span className="text-accent text-xs font-medium tracking-[0.2em] uppercase mb-4 block">
+                Selected Work
+              </span>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-sans font-medium text-white leading-tight">
+                Projects that
+                <br />
+                <span className="font-serif italic text-accent">speak</span> for
+                themselves
+              </h2>
+            </div>
             <a
               href="#contact"
               className="inline-flex items-center gap-2 text-text-muted hover:text-white text-sm font-medium transition-colors group shrink-0"
