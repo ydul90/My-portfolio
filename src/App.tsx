@@ -1292,6 +1292,23 @@ export default function App() {
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
 
+    // Auto-remove Google Translate Top Bar and fix layout
+    const killGoogleBar = () => {
+      const banner = document.querySelector(".goog-te-banner-frame") as HTMLElement;
+      if (banner) {
+        banner.style.display = "none";
+        banner.style.visibility = "hidden";
+        banner.style.height = "0";
+      }
+      if (document.body.style.top !== "0px") {
+        document.body.style.top = "0px";
+      }
+    };
+
+    const observer = new MutationObserver(killGoogleBar);
+    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+    const interval = setInterval(killGoogleBar, 1000);
+
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -1309,6 +1326,8 @@ export default function App() {
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
+      observer.disconnect();
+      clearInterval(interval);
     };
   }, []);
 
