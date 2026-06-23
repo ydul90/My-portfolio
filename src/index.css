@@ -52,22 +52,29 @@ body {
 }
 
 /* ─────────────────────────── Google Translate ─────────────────────────── */
-/* Extremely aggressive hiding of the Google Translate Top Bar */
+/* Extremely aggressive hiding of ONLY the Top Banner */
 .goog-te-banner-frame.skiptranslate,
 .goog-te-banner-frame,
 .goog-te-banner,
 #goog-gt-tt,
 #goog-gt-vt,
 .goog-te-balloon-frame,
-.goog-te-menu-frame.skiptranslate,
-iframe.goog-te-banner-frame,
-.skiptranslate {
+iframe.goog-te-banner-frame {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   height: 0 !important;
   width: 0 !important;
   pointer-events: none !important;
+}
+
+/* Ensure the Dropdown Menu (goog-te-menu-frame) is visible */
+iframe.goog-te-menu-frame,
+.goog-te-menu-frame {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 999999999 !important;
 }
 
 /* Force the page to stay at the top and not jump down */

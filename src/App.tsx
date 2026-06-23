@@ -1314,7 +1314,7 @@ export default function App() {
 
     const observer = new MutationObserver(killGoogleBar);
     observer.observe(document.documentElement, { attributes: true, subtree: true });
-    const interval = setInterval(killGoogleBar, 500);
+    const interval = setInterval(killGoogleBar, 100);
 
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
