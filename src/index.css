@@ -52,25 +52,36 @@ body {
 }
 
 /* ─────────────────────────── Google Translate ─────────────────────────── */
-/* Hide the top white banner */
+/* Extremely aggressive hiding of the Google Translate Top Bar */
 .goog-te-banner-frame.skiptranslate,
 .goog-te-banner-frame,
+.goog-te-banner,
 #goog-gt-tt,
-.goog-te-balloon-frame {
+#goog-gt-vt,
+.goog-te-balloon-frame,
+.goog-te-menu-frame.skiptranslate,
+iframe.goog-te-banner-frame {
   display: none !important;
   visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
 }
 
-/* Prevent the body from being pushed down by the banner */
+/* Force the page to stay at the top and not jump down */
+html {
+  top: 0 !important;
+}
+
 body {
   top: 0 !important;
   position: static !important;
 }
 
-/* Hide the "Powered by Google" text and logo inside the widget */
+/* Hide the "Powered by Google" and clean up the dropdown */
 .goog-te-gadget {
+  font-family: 'Inter', sans-serif !important;
   color: transparent !important;
-  font-size: 0 !important;
 }
 
 .goog-te-gadget .goog-te-combo {
@@ -80,34 +91,26 @@ body {
   border-radius: 9999px !important;
   padding: 4px 12px !important;
   font-size: 12px !important;
-  font-family: 'Inter', sans-serif !important;
   outline: none !important;
   cursor: pointer !important;
   transition: all 0.3s ease !important;
-  margin: 0 !important;
 }
 
 .goog-te-gadget .goog-te-combo:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
   color: #ffffff !important;
 }
 
-/* Hide the Google icon next to the dropdown */
+.goog-te-gadget span {
+  display: none !important;
+}
+
 .goog-te-gadget img {
   display: none !important;
 }
 
-/* Custom styling for the dropdown container in navbar */
 #google_translate_element_nav,
 #google_translate_element_mobile {
   display: inline-flex !important;
   align-items: center !important;
-}
-
-/* Fix for the translate dropdown menu (the actual popup) */
-.goog-te-menu-frame {
-  z-index: 999999 !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
